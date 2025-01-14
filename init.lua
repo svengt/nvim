@@ -265,6 +265,23 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   end,
 })
 
+-- Turn off spell checking in terminal windows
+vim.api.nvim_create_autocmd('TermOpen', {
+  pattern = '*',
+  callback = function()
+    local opts = {
+      spell = false,
+      list = false,
+      cursorline = false,
+      cursorcolumn = false,
+    }
+
+    for option, value in pairs(opts) do
+      vim.opt_local[option] = value
+    end
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
