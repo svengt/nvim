@@ -714,6 +714,7 @@ require('lazy').setup({
         html = {},
         tailwindcss = {},
         volar = {},
+        helm_ls = {},
         yamlls = {},
 
         -- clangd = {},
