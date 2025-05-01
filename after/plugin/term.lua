@@ -1,6 +1,9 @@
 local terminals = {}
 
-local function create_terminal(create_with)
+--- Creates a terminal buffer
+--- @param create_with string|nil Optional command to create terminal with
+--- @param idx number|nil Optional index for naming the terminal buffer
+local function create_terminal(create_with, idx)
   if not create_with then
     create_with = ':terminal'
   end
@@ -18,6 +21,9 @@ local function create_terminal(create_with)
   -- away and cause an error
   -- vim.api.nvim_buf_set_option(buf_id, 'bufhidden', 'hide')
   vim.api.nvim_set_option_value('bufhidden', 'hide', { buf = buf_id })
+  if idx and type(idx) == "number" then
+    vim.api.nvim_buf_set_name(buf_id, "term_" .. idx)
+  end
 
   -- Resets the buffer back to the old one
   vim.api.nvim_set_current_buf(current_id)
@@ -30,7 +36,7 @@ local function find_terminal(args)
   end
   local term_handle = terminals[args.idx]
   if not term_handle or not vim.api.nvim_buf_is_valid(term_handle.buf_id) then
-    local buf_id, term_id = create_terminal(args.create_with)
+    local buf_id, term_id = create_terminal(args.create_with, args.idx)
     if buf_id == nil then
       error 'Failed to find and create terminal.'
       return
