@@ -52,9 +52,12 @@ return {
     { '<c-\\>', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
-    use_default_mappings = false,
+    use_default_mappings = true,
     window = {
       position = "left",
+      mappings = {
+        ["<2-LeftMouse>"] = "open",
+      },
     },
     filesystem = {
       filtered_items = {
@@ -69,6 +72,7 @@ return {
           ['<space>f'] = 'find_files_at',
           ['<space>F'] = 'find_files_at_ignored',
           ['<cr>'] = 'open',
+          ['<2-LeftMouse>'] = 'open',
         },
       },
       commands = {
