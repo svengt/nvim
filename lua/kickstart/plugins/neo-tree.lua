@@ -52,6 +52,10 @@ return {
     { '<c-\\>', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    use_default_mappings = false,
+    window = {
+      position = "left",
+    },
     filesystem = {
       filtered_items = {
         hide_dotfiles = false,
@@ -64,6 +68,7 @@ return {
           ['<space>G'] = 'grep_at_ignored',
           ['<space>f'] = 'find_files_at',
           ['<space>F'] = 'find_files_at_ignored',
+          ['<cr>'] = 'open',
         },
       },
       commands = {
@@ -78,6 +83,27 @@ return {
         end,
         find_files_at_ignored = function(state)
           find_files_at(state, true)
+        end,
+        open = function(state)
+          local node = state.tree:get_node()
+          if node.type == "file" then
+            -- Get current buffer information
+            local current_buffer = vim.api.nvim_get_current_buf()
+            
+            -- Focus on the last used buffer if it exists
+            if vim.fn.winnr('$') > 1 then
+              -- If we're in neo-tree window, focus on the previous window
+              if vim.bo.filetype == "neo-tree" then
+                vim.cmd("wincmd p")
+              end
+            end
+            
+            -- Open file in current window
+            vim.cmd("edit " .. node.path)
+          else
+            -- For directories, use the default behavior
+            require("neo-tree.sources.filesystem.commands").open(state)
+          end
         end,
       },
     },
